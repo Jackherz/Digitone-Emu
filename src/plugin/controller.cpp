@@ -3,12 +3,14 @@
 #include "param_ids.hpp"
 #include "base/source/fstreamer.h"
 #include "pluginterfaces/base/ustring.h"
+#include "vstgui/plugin-bindings/vst3editor.h"
 
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 
 namespace dn1::vst3 {
 namespace {
@@ -51,6 +53,14 @@ Steinberg::tresult PLUGIN_API Controller::initialize(Steinberg::FUnknown* contex
             toVstParameter(spec.id));
     }
     return result;
+}
+
+Steinberg::IPlugView* PLUGIN_API Controller::createView(
+    Steinberg::FIDString name)
+{
+    if (name && std::strcmp(name, Steinberg::Vst::ViewType::kEditor) == 0)
+        return new VSTGUI::VST3Editor(this, "view", "editor.uidesc");
+    return nullptr;
 }
 
 Steinberg::tresult PLUGIN_API Controller::setComponentState(

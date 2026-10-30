@@ -37,14 +37,16 @@ repository root:
 ```
 
 The build script fetches the Steinberg VST3 SDK into the ignored
-`third_party/vst3sdk/` directory, builds an arm64 plug-in, ad-hoc signs it, and
-installs it at:
+`third_party/vst3sdk/` directory, builds an arm64 plug-in with a VSTGUI custom
+editor, ad-hoc signs it, and installs it at:
 
 ```text
 ~/Library/Audio/Plug-Ins/VST3/DN1FM.vst3
 ```
 
-Restart the DAW and rescan VST3 plug-ins if it was already open.
+Restart the DAW and rescan VST3 plug-ins if it was already open. Open the
+plug-in's editor from the DAW to use the custom FM panel; its controls are
+bound to the same automatable parameters as the generic editor.
 
 VS Code is fine as the editor, but it does not replace the compiler, SDK, or
 code-signing tools. If you only have Apple's Command Line Tools and want to

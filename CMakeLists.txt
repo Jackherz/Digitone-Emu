@@ -40,11 +40,10 @@ if(DN1_BUILD_PLUGIN)
             "Run scripts/bootstrap_vst3sdk.sh or configure with -Dvst3sdk_SOURCE_DIR=/path.")
     endif()
 
-    # The SDK's example projects and VSTGUI are not needed by this headless,
-    # generic-editor plug-in. Keeping them off makes the build much smaller.
+    # Keep the SDK examples off, but enable VSTGUI for the custom editor.
     set(SMTG_ENABLE_VST3_HOSTING_EXAMPLES OFF CACHE BOOL "" FORCE)
     set(SMTG_ENABLE_VST3_PLUGIN_EXAMPLES OFF CACHE BOOL "" FORCE)
-    set(SMTG_ENABLE_VSTGUI_SUPPORT OFF CACHE BOOL "" FORCE)
+    set(SMTG_ENABLE_VSTGUI_SUPPORT ON CACHE BOOL "" FORCE)
 
     add_subdirectory("${vst3sdk_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/vst3sdk")
     smtg_enable_vst3_sdk()
@@ -58,12 +57,17 @@ if(DN1_BUILD_PLUGIN)
         src/plugin/processor.cpp
         src/plugin/processor.hpp
         src/plugin/version.h
+        src/plugin/editor.uidesc
     )
 
     smtg_add_vst3plugin(DN1FM ${DN1_PLUGIN_SOURCES})
     target_compile_features(DN1FM PRIVATE cxx_std_17)
     target_include_directories(DN1FM PRIVATE src)
-    target_link_libraries(DN1FM PRIVATE sdk dn1_engine)
+    target_link_libraries(DN1FM PRIVATE sdk vstgui_support dn1_engine)
+    smtg_target_add_plugin_resources(DN1FM
+        RESOURCES
+            src/plugin/editor.uidesc
+    )
     smtg_target_configure_version_file(DN1FM)
 
     if(SMTG_MAC)
