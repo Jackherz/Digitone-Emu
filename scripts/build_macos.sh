@@ -15,6 +15,28 @@ if [[ "$(uname -m)" != "arm64" ]]; then
     exit 1
 fi
 
+# The VST3 SDK checks xcodebuild itself. Command Line Tools alone provide a
+# compiler, but this SDK release also requires the full Xcode application.
+if ! command -v xcodebuild >/dev/null 2>&1; then
+    echo "Full Xcode is required; xcodebuild was not found." >&2
+    echo "Install Xcode from the App Store, then select it with:" >&2
+    echo "  sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer" >&2
+    exit 1
+fi
+XCODE_VERSION=$(xcodebuild -version 2>/dev/null | awk '/^Xcode / { print $2; exit }')
+if [[ -z "${XCODE_VERSION}" ]]; then
+    echo "Full Xcode is required, but xcodebuild is not using an Xcode installation." >&2
+    echo "Run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer" >&2
+    exit 1
+fi
+XCODE_MAJOR=${XCODE_VERSION%%.*}
+if [[ ! "${XCODE_MAJOR}" =~ ^[0-9]+$ ]] || (( XCODE_MAJOR < 9 )); then
+    echo "Xcode 9 or newer is required; detected ${XCODE_VERSION}." >&2
+    exit 1
+fi
+
+echo "Using Xcode ${XCODE_VERSION}"
+
 "${ROOT_DIR}/scripts/bootstrap_vst3sdk.sh"
 
 cmake -S "${ROOT_DIR}" -B "${BUILD_DIR}" \
