@@ -1,0 +1,20 @@
+# Local build output
+/build*/
+/cmake-build-*/
+/.cache/
+
+# The VST3 SDK is fetched locally and is not part of this repository.
+/third_party/vst3sdk/
+
+# User-supplied proprietary firmware and derived analysis material.
+*.syx
+*.bin
+*.img
+/firmware/
+/reports/
+__pycache__/
+
+# macOS/editor noise
+.DS_Store
+.vscode/
+.idea/
