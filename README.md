@@ -44,8 +44,22 @@ installs it at:
 ~/Library/Audio/Plug-Ins/VST3/DN1FM.vst3
 ```
 
-Restart the DAW and rescan VST3 plug-ins if it was already open. To use another
-SDK location or install location:
+Restart the DAW and rescan VST3 plug-ins if it was already open.
+
+VS Code is fine as the editor, but it does not replace the compiler, SDK, or
+code-signing tools. If you only have Apple's Command Line Tools and want to
+try the Makefile/Ninja path without full Xcode, opt in explicitly:
+
+```sh
+DN1_ALLOW_COMMAND_LINE_TOOLS=1 ./scripts/build_macos.sh
+```
+
+This uses `clang`, `xcrun`, the macOS SDK, and `codesign` from the Command Line
+Tools while bypassing the Steinberg SDK's `xcodebuild` version check. It is an
+unsupported fallback; install full Xcode if it fails or if you later need AU,
+iOS, Xcode project generation, or notarized distribution.
+
+To use another SDK location or install location:
 
 ```sh
 VST3_SDK_DIR="$HOME/src/vst3sdk" \
