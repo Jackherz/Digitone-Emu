@@ -69,9 +69,18 @@ python3 tools/firmware_manifest.py \
   --redact-path --output reports/digitone-os.json
 ```
 
+For a compact section-table report, use the standard-library-only helper:
+
+```sh
+python3 tools/elektron_container_report.py \
+  "$HOME/Downloads/Digitone_and_Digitone_Keys_OS1.44.syx" \
+  --redact-path --output reports/digitone-os1.44-container.json
+```
+
 `.syx`, `.bin`, `.img`, `firmware/`, and `reports/` are ignored by Git. Do not
 commit the firmware, extracted sections, factory content, or reverse-engineered
-binary dumps.
+binary dumps. The metadata recorded from the uploaded OS 1.44 file is in
+[`docs/DIGITONE_OS1_44.md`](docs/DIGITONE_OS1_44.md).
 
 For the firmware-backed standalone route, the existing public
 [digiemu](https://github.com/irpina/digiemu) project is the relevant reference:
@@ -103,7 +112,7 @@ src/engine/       portable clean-room FM engine
 src/plugin/       Steinberg VST3 processor, controller, and factory
 scripts/          SDK bootstrap, macOS build, and engine test helpers
 tests/            portable engine tests
-tools/            metadata-only firmware helper
+tools/            metadata-only firmware helpers
 docs/             scope and research notes
 ```
 
