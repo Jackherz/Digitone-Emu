@@ -1,4 +1,5 @@
 #include "engine/dn1_engine.hpp"
+#include "engine/dn1_presets.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -64,6 +65,29 @@ int main()
         assert(finiteBuffer(block));
         assert(finiteBuffer(blockRight));
         assert(peak(block) > 0.00001f);
+    }
+
+    // The starter bank is deliberately independent of the VST3 layer so the
+    // same original sounds can be used by a future browser or standalone app.
+    const auto& bank = dn1::presetBank();
+    assert(bank.size() == dn1::presetCount());
+    for (std::size_t index = 0; index < bank.size(); ++index) {
+        const auto& patch = bank[index];
+        assert(patch.name != nullptr);
+        assert(patch.name[0] != '\0');
+        for (const auto value : patch.values)
+            assert(value >= 0.0f && value <= 1.0f);
+
+        dn1::applyPreset(engine, patch);
+        engine.reset();
+        engine.noteOn(0, 60, 0.8f);
+        std::vector<float> patchLeft(1024);
+        std::vector<float> patchRight(1024);
+        engine.render(patchLeft.data(), patchRight.data(),
+                      static_cast<std::uint32_t>(patchLeft.size()));
+        assert(finiteBuffer(patchLeft));
+        assert(finiteBuffer(patchRight));
+        assert(peak(patchLeft) > 0.00001f);
     }
 
     std::cout << "dn1_engine tests passed\n";

@@ -21,6 +21,7 @@ add_library(dn1_engine STATIC
     src/engine/dn1_engine.cpp
     src/engine/dn1_engine.hpp
     src/engine/dn1_parameters.hpp
+    src/engine/dn1_presets.hpp
 )
 target_include_directories(dn1_engine PUBLIC src)
 target_compile_features(dn1_engine PUBLIC cxx_std_17)
