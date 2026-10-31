@@ -15,11 +15,11 @@
     <color name="Transparent" rgba="#00000000"/>
   </colors>
   <template background-color="Background" background-color-draw-style="filled" class="CViewContainer" mouse-enabled="true" minSize="1320,750" maxSize="1320,750" name="view" origin="0,0" size="1320,750" transparent="false">
-    <view background-color="Header" background-color-draw-style="filled" class="CViewContainer" mouse-enabled="false" origin="0,0" size="1320,78" transparent="false">
+    <view background-color="Header" background-color-draw-style="filled" class="CViewContainer" mouse-enabled="true" origin="0,0" size="1320,78" transparent="false">
       <view back-color="Transparent" class="CTextLabel" font="~ NormalFontVeryBig" font-color="Text" origin="26,12" size="330,32" style-no-frame="true" style-no-text="false" text-alignment="left" title="DN1FM" transparent="true"/>
       <view back-color="Transparent" class="CTextLabel" font="~ NormalFontSmall" font-color="Muted" origin="28,45" size="430,18" style-no-frame="true" text-alignment="left" title="CLEAN-ROOM FM INSTRUMENT  |  8 VOICES" transparent="true"/>
       <view back-color="Transparent" class="CTextLabel" font="~ NormalFont" font-color="Muted" origin="1010,18" size="105,24" style-no-frame="true" text-alignment="right" title="ALGORITHM" transparent="true"/>
-      <view back-color="Panel" frame-color="Border" frame-width="1" class="COptionMenu" control-tag="Algorithm" font="~ NormalFont" font-color="Text" origin="1124,15" size="150,32" transparent="false"/>
+      <view back-color="Panel" frame-color="Border" frame-width="1" class="COptionMenu" control-tag="Algorithm" default-value="0" font="~ NormalFont" font-color="Text" max-value="7" menu-check-style="false" menu-popup-style="true" min-value="0" mouse-enabled="true" origin="1124,15" size="150,32" transparent="false" wants-focus="true"/>
       <view back-color="AccentBlue" class="CTextLabel" font="~ NormalFontSmall" font-color="Header" origin="28,65" size="4,4" style-no-frame="true" title="" transparent="false"/>
     </view>
     <view background-color="Panel" background-color-draw-style="filled" class="CViewContainer" mouse-enabled="true" origin="18,92" size="312,480" transparent="false">
@@ -164,32 +164,32 @@
   <control-tags>
     <control-tag name="Algorithm" tag="1000"/>
     <control-tag name="OpA_Ratio" tag="1001"/>
-    <control-tag name="OpA_Fine" tag="1002"/>
-    <control-tag name="OpA_Level" tag="1003"/>
-    <control-tag name="OpA_Attack" tag="1004"/>
-    <control-tag name="OpA_Decay" tag="1005"/>
-    <control-tag name="OpA_Sustain" tag="1006"/>
-    <control-tag name="OpA_Release" tag="1007"/>
-    <control-tag name="OpB_Ratio" tag="1008"/>
-    <control-tag name="OpB_Fine" tag="1009"/>
+    <control-tag name="OpA_Fine" tag="1005"/>
+    <control-tag name="OpA_Level" tag="1009"/>
+    <control-tag name="OpA_Attack" tag="1013"/>
+    <control-tag name="OpA_Decay" tag="1017"/>
+    <control-tag name="OpA_Sustain" tag="1021"/>
+    <control-tag name="OpA_Release" tag="1025"/>
+    <control-tag name="OpB_Ratio" tag="1002"/>
+    <control-tag name="OpB_Fine" tag="1006"/>
     <control-tag name="OpB_Level" tag="1010"/>
-    <control-tag name="OpB_Attack" tag="1011"/>
-    <control-tag name="OpB_Decay" tag="1012"/>
-    <control-tag name="OpB_Sustain" tag="1013"/>
-    <control-tag name="OpB_Release" tag="1014"/>
-    <control-tag name="OpC_Ratio" tag="1015"/>
-    <control-tag name="OpC_Fine" tag="1016"/>
-    <control-tag name="OpC_Level" tag="1017"/>
-    <control-tag name="OpC_Attack" tag="1018"/>
+    <control-tag name="OpB_Attack" tag="1014"/>
+    <control-tag name="OpB_Decay" tag="1018"/>
+    <control-tag name="OpB_Sustain" tag="1022"/>
+    <control-tag name="OpB_Release" tag="1026"/>
+    <control-tag name="OpC_Ratio" tag="1003"/>
+    <control-tag name="OpC_Fine" tag="1007"/>
+    <control-tag name="OpC_Level" tag="1011"/>
+    <control-tag name="OpC_Attack" tag="1015"/>
     <control-tag name="OpC_Decay" tag="1019"/>
-    <control-tag name="OpC_Sustain" tag="1020"/>
-    <control-tag name="OpC_Release" tag="1021"/>
-    <control-tag name="OpD_Ratio" tag="1022"/>
-    <control-tag name="OpD_Fine" tag="1023"/>
-    <control-tag name="OpD_Level" tag="1024"/>
-    <control-tag name="OpD_Attack" tag="1025"/>
-    <control-tag name="OpD_Decay" tag="1026"/>
-    <control-tag name="OpD_Sustain" tag="1027"/>
+    <control-tag name="OpC_Sustain" tag="1023"/>
+    <control-tag name="OpC_Release" tag="1027"/>
+    <control-tag name="OpD_Ratio" tag="1004"/>
+    <control-tag name="OpD_Fine" tag="1008"/>
+    <control-tag name="OpD_Level" tag="1012"/>
+    <control-tag name="OpD_Attack" tag="1016"/>
+    <control-tag name="OpD_Decay" tag="1020"/>
+    <control-tag name="OpD_Sustain" tag="1024"/>
     <control-tag name="OpD_Release" tag="1028"/>
     <control-tag name="FmAmount" tag="1029"/>
     <control-tag name="Feedback" tag="1030"/>
