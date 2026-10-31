@@ -20,6 +20,7 @@ cycle-accurate Digitone compatibility yet.
   poly-pressure events
 - Filter, pan, master level, parameter automation, and plug-in state saving
 - Six original starter programs exposed through the VST3 program-list/state path
+  and a six-position selector in the custom editor
 - No firmware is required to build or run the current engine
 - Custom VSTGUI editor with direct controls for the same automatable parameters;
   hosts can also use the generic VST3 parameter editor
@@ -136,8 +137,8 @@ docs/             scope and research notes
 
 ## Next milestones
 
-1. Add a custom-editor preset browser for the VST3 program list and refine the
-   four operator pages.
+1. Add preset-name/dirty-state polish to the custom editor and refine the four
+   operator pages.
 2. Establish a hardware/reference-recording test set for envelopes, ratios,
    algorithms, pitch bend, and filter behavior.
 3. Add the Digitone-style modulation, effects, and parameter locks only when

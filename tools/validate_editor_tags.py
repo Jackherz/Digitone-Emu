@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Validate that the VSTGUI editor tags match the engine parameter IDs.
+"""Validate that the VSTGUI editor tags match exposed VST3 parameter IDs.
 
 The editor resource uses symbolic control-tag names, but the numeric values
 must remain identical to the VST3 parameter IDs exposed by the controller.
 This check prevents a visual control from silently editing a different engine
-parameter when the parameter catalog or UI layout changes.
+parameter or program-list entry when the catalog or UI layout changes.
 """
 
 from __future__ import annotations
@@ -44,6 +44,10 @@ def parameter_ids(parameter_header: Path, first_vst_id: int) -> dict[str, int]:
 
 def validate(parameter_header: Path, resource: Path, first_vst_id: int) -> list[str]:
     expected = parameter_ids(parameter_header, first_vst_id)
+    # The named preset program list lives just after the engine catalog. It is
+    # a VST3 controller parameter, not an engine ParameterId, but it is still
+    # intentionally bound by the custom editor.
+    expected["Preset"] = first_vst_id + len(expected)
     root = ElementTree.parse(resource).getroot()
     actual: dict[str, int] = {}
     errors: list[str] = []

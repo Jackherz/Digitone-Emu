@@ -18,6 +18,8 @@
     <view background-color="Header" background-color-draw-style="filled" class="CViewContainer" mouse-enabled="true" origin="0,0" size="1320,78" transparent="false">
       <view back-color="Transparent" class="CTextLabel" font="~ NormalFontVeryBig" font-color="Text" origin="26,12" size="330,32" style-no-frame="true" style-no-text="false" text-alignment="left" title="DN1FM" transparent="true"/>
       <view back-color="Transparent" class="CTextLabel" font="~ NormalFontSmall" font-color="Muted" origin="28,45" size="430,18" style-no-frame="true" text-alignment="left" title="CLEAN-ROOM FM INSTRUMENT  |  8 VOICES" transparent="true"/>
+      <view back-color="Transparent" class="CTextLabel" font="~ NormalFont" font-color="Muted" origin="470,18" size="62,24" style-no-frame="true" text-alignment="right" title="PRESET" transparent="true"/>
+      <view class="CSegmentButton" control-tag="Preset" default-value="0" font="~ NormalFontSmall" frame-color="Border" frame-width="1" gradient="Preset Gradient" gradient-highlighted="Preset Gradient Highlighted" icon-text-margin="0" max-value="5" min-value="0" mouse-enabled="true" origin="540,15" round-radius="6" segment-names="INIT,BASS,BELL,PAD,PLUCK,ORGAN" selection-mode="Single" size="450,32" style="horizontal" text-alignment="center" text-color="Text" text-color-highlighted="Header" transparent="false" wants-focus="true"/>
       <view back-color="Transparent" class="CTextLabel" font="~ NormalFont" font-color="Muted" origin="1010,18" size="105,24" style-no-frame="true" text-alignment="right" title="ALGORITHM" transparent="true"/>
       <view class="CSegmentButton" control-tag="Algorithm" default-value="0" font="~ NormalFont" frame-color="Border" frame-width="1" gradient="Algorithm Gradient" gradient-highlighted="Algorithm Gradient Highlighted" icon-text-margin="0" max-value="7" min-value="0" mouse-enabled="true" origin="1124,15" round-radius="6" segment-names="1,2,3,4,5,6,7,8" selection-mode="Single" size="150,32" style="horizontal" text-alignment="center" text-color="Text" text-color-highlighted="Header" transparent="false" wants-focus="true"/>
       <view back-color="AccentBlue" class="CTextLabel" font="~ NormalFontSmall" font-color="Header" origin="28,65" size="4,4" style-no-frame="true" title="" transparent="false"/>
@@ -162,6 +164,7 @@
     </view>
   </template>
   <control-tags>
+    <control-tag name="Preset" tag="1039"/>
     <control-tag name="Algorithm" tag="1000"/>
     <control-tag name="OpA_Ratio" tag="1001"/>
     <control-tag name="OpA_Fine" tag="1005"/>
@@ -203,6 +206,14 @@
     <control-tag name="Master" tag="1038"/>
   </control-tags>
   <gradients>
+    <gradient name="Preset Gradient">
+      <color-stop rgba="#4f3675ff" start="0"/>
+      <color-stop rgba="#352451ff" start="1"/>
+    </gradient>
+    <gradient name="Preset Gradient Highlighted">
+      <color-stop rgba="#68d6c7ff" start="0"/>
+      <color-stop rgba="#f2c14eff" start="1"/>
+    </gradient>
     <gradient name="Algorithm Gradient">
       <color-stop rgba="#4f3675ff" start="0"/>
       <color-stop rgba="#352451ff" start="1"/>
