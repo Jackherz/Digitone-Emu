@@ -19,8 +19,10 @@ cycle-accurate Digitone compatibility yet.
   basic MIDI CC handling; the first VST3 adapter currently routes note and
   poly-pressure events
 - Filter, pan, master level, parameter automation, and plug-in state saving
+- Six original starter programs exposed through the VST3 program-list/state path
 - No firmware is required to build or run the current engine
-- No custom editor yet; hosts use their generic VST3 parameter editor
+- Custom VSTGUI editor with direct controls for the same automatable parameters;
+  hosts can also use the generic VST3 parameter editor
 
 The parameter names and signal flow are deliberately an independent starting
 point. They should be calibrated against recordings and measurements from the
@@ -134,7 +136,8 @@ docs/             scope and research notes
 
 ## Next milestones
 
-1. Add a small custom editor with the four operator pages and a preset browser.
+1. Add a custom-editor preset browser for the VST3 program list and refine the
+   four operator pages.
 2. Establish a hardware/reference-recording test set for envelopes, ratios,
    algorithms, pitch bend, and filter behavior.
 3. Add the Digitone-style modulation, effects, and parameter locks only when
