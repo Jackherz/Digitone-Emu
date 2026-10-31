@@ -1,5 +1,6 @@
 #include "controller.hpp"
 
+#include "engine/dn1_presets.hpp"
 #include "param_ids.hpp"
 #include "base/source/fstreamer.h"
 #include "pluginterfaces/base/ustring.h"
@@ -7,6 +8,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstddef>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -15,7 +17,8 @@
 namespace dn1::vst3 {
 namespace {
 
-constexpr std::int32_t kStateVersion = 1;
+constexpr std::int32_t kStateVersion = 2;
+constexpr std::int32_t kLegacyStateVersion = 1;
 
 void writeText(Steinberg::Vst::String128 destination, const char* text)
 {
@@ -42,9 +45,23 @@ bool isOperatorTime(ParameterId id) noexcept
 
 Steinberg::tresult PLUGIN_API Controller::initialize(Steinberg::FUnknown* context)
 {
-    const auto result = EditController::initialize(context);
+    const auto result = EditControllerEx1::initialize(context);
     if (result != Steinberg::kResultTrue)
         return result;
+
+    // Export the same bank as a real VST3 program list. Hosts can therefore
+    // show named presets while the processor still receives one normalized
+    // program-change parameter and expands it into the engine catalog.
+    addUnit(new Steinberg::Vst::Unit(
+        USTRING("DN1FM"), Steinberg::Vst::kRootUnitId,
+        Steinberg::Vst::kNoParentUnitId, kPresetParameter));
+
+    auto* presetList = new Steinberg::Vst::ProgramList(
+        USTRING("Presets"), kPresetParameter, Steinberg::Vst::kRootUnitId);
+    for (const auto& preset : dn1::presetBank())
+        presetList->addProgram(USTRING(preset.name));
+    addProgramList(presetList);
+    parameters.addParameter(presetList->getParameter());
 
     for (const auto& spec : dn1::kParameterSpecs) {
         parameters.addParameter(
@@ -63,6 +80,20 @@ Steinberg::IPlugView* PLUGIN_API Controller::createView(
     return nullptr;
 }
 
+Steinberg::tresult PLUGIN_API Controller::getUnitByBus(
+    Steinberg::Vst::MediaType type, Steinberg::Vst::BusDirection direction,
+    Steinberg::int32 busIndex, Steinberg::int32 channel,
+    Steinberg::Vst::UnitID& unitId)
+{
+    if (type == Steinberg::Vst::MediaTypes::kEvent &&
+        direction == Steinberg::Vst::BusDirections::kInput &&
+        busIndex == 0 && channel == 0) {
+        unitId = Steinberg::Vst::kRootUnitId;
+        return Steinberg::kResultTrue;
+    }
+    return Steinberg::kResultFalse;
+}
+
 Steinberg::tresult PLUGIN_API Controller::setComponentState(
     Steinberg::IBStream* state)
 {
@@ -71,8 +102,21 @@ Steinberg::tresult PLUGIN_API Controller::setComponentState(
 
     Steinberg::IBStreamer streamer(state, kLittleEndian);
     Steinberg::int32 version = 0;
-    if (!streamer.readInt32(version) || version != kStateVersion)
+    if (!streamer.readInt32(version) ||
+        (version != kLegacyStateVersion && version != kStateVersion))
         return Steinberg::kResultFalse;
+
+    if (version == kStateVersion) {
+        Steinberg::int32 presetIndex = 0;
+        if (!streamer.readInt32(presetIndex) || presetIndex < 0 ||
+            presetIndex >= static_cast<Steinberg::int32>(dn1::presetCount()))
+            return Steinberg::kResultFalse;
+        const auto denominator = static_cast<Steinberg::Vst::ParamValue>(
+            std::max<std::size_t>(1, dn1::presetCount() - 1));
+        setParamNormalized(kPresetParameter,
+                           static_cast<Steinberg::Vst::ParamValue>(presetIndex) /
+                               denominator);
+    }
 
     for (const auto& spec : dn1::kParameterSpecs) {
         float value = 0.0f;

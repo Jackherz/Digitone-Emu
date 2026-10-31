@@ -5,6 +5,8 @@
 #include "public.sdk/source/vst/vstaudioeffect.h"
 #include "pluginterfaces/vst/ivstevents.h"
 
+#include <cstdint>
+
 namespace dn1::vst3 {
 
 class Processor final : public Steinberg::Vst::AudioEffect {
@@ -31,8 +33,10 @@ public:
 
 private:
     void handleEvent(const Steinberg::Vst::Event& event) noexcept;
+    void applyPresetIndex(std::uint32_t index) noexcept;
 
     dn1::DigitoneEngine engine_;
+    std::uint32_t currentPreset_ {0};
 };
 
 } // namespace dn1::vst3

@@ -1,20 +1,24 @@
 #include "processor.hpp"
 
+#include "engine/dn1_presets.hpp"
 #include "param_ids.hpp"
 #include "base/source/fstreamer.h"
 #include "pluginterfaces/vst/ivstparameterchanges.h"
 
 #include <algorithm>
 #include <array>
+#include <cmath>
 #include <cstdint>
 
 namespace dn1::vst3 {
 namespace {
 
-constexpr std::int32_t kStateVersion = 1;
+constexpr std::int32_t kStateVersion = 2;
+constexpr std::int32_t kLegacyStateVersion = 1;
 constexpr std::size_t kMaxTimedActions = 512;
 
 enum class TimedActionKind : std::uint8_t {
+    Preset,
     Parameter,
     Event,
 };
@@ -32,6 +36,15 @@ struct TimedAction {
 Processor::Processor()
 {
     setControllerClass(kControllerUID);
+    applyPresetIndex(0);
+}
+
+void Processor::applyPresetIndex(std::uint32_t index) noexcept
+{
+    if (index >= dn1::presetCount())
+        return;
+    currentPreset_ = index;
+    dn1::applyPreset(engine_, dn1::preset(static_cast<dn1::PresetId>(index)));
 }
 
 Steinberg::tresult PLUGIN_API Processor::initialize(Steinberg::FUnknown* context)
@@ -118,7 +131,8 @@ Steinberg::tresult PLUGIN_API Processor::process(
         for (Steinberg::int32 queueIndex = 0; queueIndex < queueCount;
              ++queueIndex) {
             auto* queue = data.inputParameterChanges->getParameterData(queueIndex);
-            if (!queue || !isEngineParameter(queue->getParameterId()))
+            if (!queue || (!isEngineParameter(queue->getParameterId()) &&
+                           !isPresetParameter(queue->getParameterId())))
                 continue;
 
             const auto pointCount = queue->getPointCount();
@@ -134,7 +148,9 @@ Steinberg::tresult PLUGIN_API Processor::process(
 
                 auto& action = actions[actionCount++];
                 action.sampleOffset = sampleOffset;
-                action.kind = TimedActionKind::Parameter;
+                action.kind = isPresetParameter(queue->getParameterId())
+                                  ? TimedActionKind::Preset
+                                  : TimedActionKind::Parameter;
                 action.parameterId = queue->getParameterId();
                 action.parameterValue = static_cast<float>(value);
             }
@@ -182,7 +198,14 @@ Steinberg::tresult PLUGIN_API Processor::process(
             cursor = offset;
         }
 
-        if (actions[index].kind == TimedActionKind::Parameter) {
+        if (actions[index].kind == TimedActionKind::Preset) {
+            const auto maxPreset = static_cast<float>(dn1::presetCount() - 1);
+            const auto normalized = std::clamp(actions[index].parameterValue,
+                                               0.0f, 1.0f);
+            const auto presetIndex = static_cast<std::uint32_t>(
+                std::lround(normalized * maxPreset));
+            applyPresetIndex(presetIndex);
+        } else if (actions[index].kind == TimedActionKind::Parameter) {
             engine_.setParameter(toEngineParameter(actions[index].parameterId),
                                  actions[index].parameterValue);
         } else {
@@ -205,8 +228,19 @@ Steinberg::tresult PLUGIN_API Processor::setState(Steinberg::IBStream* state)
 
     Steinberg::IBStreamer streamer(state, kLittleEndian);
     Steinberg::int32 version = 0;
-    if (!streamer.readInt32(version) || version != kStateVersion)
+    if (!streamer.readInt32(version) ||
+        (version != kLegacyStateVersion && version != kStateVersion))
         return Steinberg::kResultFalse;
+
+    if (version == kStateVersion) {
+        Steinberg::int32 presetIndex = 0;
+        if (!streamer.readInt32(presetIndex) || presetIndex < 0 ||
+            presetIndex >= static_cast<Steinberg::int32>(dn1::presetCount()))
+            return Steinberg::kResultFalse;
+        currentPreset_ = static_cast<std::uint32_t>(presetIndex);
+    } else {
+        currentPreset_ = 0;
+    }
 
     for (const auto& spec : dn1::kParameterSpecs) {
         float value = 0.0f;
@@ -223,7 +257,8 @@ Steinberg::tresult PLUGIN_API Processor::getState(Steinberg::IBStream* state)
         return Steinberg::kInvalidArgument;
 
     Steinberg::IBStreamer streamer(state, kLittleEndian);
-    if (!streamer.writeInt32(kStateVersion))
+    if (!streamer.writeInt32(kStateVersion) ||
+        !streamer.writeInt32(static_cast<Steinberg::int32>(currentPreset_)))
         return Steinberg::kResultFalse;
     for (const auto& spec : dn1::kParameterSpecs) {
         if (!streamer.writeFloat(engine_.getParameter(spec.id)))

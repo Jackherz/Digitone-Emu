@@ -51,11 +51,9 @@ inline std::array<Preset, presetCount()> makePresetBank()
             setPresetValue(preset, spec.id, spec.defaultNormalized);
     }
 
-    auto& init = bank[static_cast<std::size_t>(PresetId::Init)];
-    setPresetValue(init, ParameterId::Algorithm, 0.0f);
-    setPresetValue(init, ParameterId::FmAmount, 0.45f);
-    setPresetValue(init, ParameterId::Feedback, 0.08f);
-
+    // Init intentionally remains exactly at the catalog defaults so a host
+    // loading a new instance sees the same values in the processor, generic
+    // parameter view, and program-list selection.
     auto& bass = bank[static_cast<std::size_t>(PresetId::SolidBass)];
     setPresetValue(bass, ParameterId::Algorithm, 1.0f / 7.0f);
     setPresetValue(bass, ParameterId::OpA_Ratio, 0.25f);
