@@ -2,6 +2,14 @@ cmake_minimum_required(VERSION 3.25)
 
 project(DN1FM VERSION 0.1.0 LANGUAGES CXX)
 
+# VSTGUI's macOS implementation contains Objective-C++ sources. Enable the
+# language in the top-level project before the SDK subdirectory is added; with
+# Makefile generators, enabling it later from the SDK can leave CMake without
+# its Objective-C++ compile rule.
+if(APPLE)
+    enable_language(OBJCXX)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
