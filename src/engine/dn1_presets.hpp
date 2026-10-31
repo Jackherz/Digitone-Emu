@@ -21,6 +21,8 @@ enum class PresetId : std::uint32_t {
 
 struct Preset {
     const char* name {nullptr};
+    const char* category {nullptr};
+    const char* description {nullptr};
     std::array<float, static_cast<std::size_t>(ParameterId::Count)> values {};
 };
 
@@ -43,6 +45,25 @@ inline std::array<Preset, presetCount()> makePresetBank()
     bank[static_cast<std::size_t>(PresetId::SoftPad)].name = "Soft Pad";
     bank[static_cast<std::size_t>(PresetId::MetalPluck)].name = "Metal Pluck";
     bank[static_cast<std::size_t>(PresetId::OrganStack)].name = "Organ Stack";
+
+    bank[static_cast<std::size_t>(PresetId::Init)].category = "Template";
+    bank[static_cast<std::size_t>(PresetId::Init)].description =
+        "Neutral four-operator starting point";
+    bank[static_cast<std::size_t>(PresetId::SolidBass)].category = "Bass";
+    bank[static_cast<std::size_t>(PresetId::SolidBass)].description =
+        "Focused low-end voice with a firm attack";
+    bank[static_cast<std::size_t>(PresetId::GlassBell)].category = "Keys";
+    bank[static_cast<std::size_t>(PresetId::GlassBell)].description =
+        "Bright inharmonic tone with a long tail";
+    bank[static_cast<std::size_t>(PresetId::SoftPad)].category = "Pad";
+    bank[static_cast<std::size_t>(PresetId::SoftPad)].description =
+        "Slow evolving sustained layer";
+    bank[static_cast<std::size_t>(PresetId::MetalPluck)].category = "Percussion";
+    bank[static_cast<std::size_t>(PresetId::MetalPluck)].description =
+        "Short resonant strike with metallic overtones";
+    bank[static_cast<std::size_t>(PresetId::OrganStack)].category = "Keys";
+    bank[static_cast<std::size_t>(PresetId::OrganStack)].description =
+        "Stable harmonic stack for chord work";
 
     // Start every patch from the engine's documented defaults. These are
     // original starter sounds, not copies of factory Digitone programs.

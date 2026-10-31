@@ -4,6 +4,7 @@
 #include "param_ids.hpp"
 #include "base/source/fstreamer.h"
 #include "pluginterfaces/base/ustring.h"
+#include "pluginterfaces/vst/vstpresetkeys.h"
 #include "vstgui/plugin-bindings/vst3editor.h"
 
 #include <algorithm>
@@ -58,8 +59,18 @@ Steinberg::tresult PLUGIN_API Controller::initialize(Steinberg::FUnknown* contex
 
     auto* presetList = new Steinberg::Vst::ProgramList(
         USTRING("Presets"), kPresetParameter, Steinberg::Vst::kRootUnitId);
-    for (const auto& preset : dn1::presetBank())
-        presetList->addProgram(USTRING(preset.name));
+    for (const auto& preset : dn1::presetBank()) {
+        const auto programIndex = presetList->addProgram(USTRING(preset.name));
+        presetList->setProgramInfo(programIndex,
+                                   Steinberg::Vst::PresetAttributes::kInstrument,
+                                   USTRING("Synthesizer|FM"));
+        presetList->setProgramInfo(programIndex,
+                                   Steinberg::Vst::PresetAttributes::kStyle,
+                                   USTRING(preset.category));
+        presetList->setProgramInfo(programIndex,
+                                   Steinberg::Vst::PresetAttributes::kCharacter,
+                                   USTRING(preset.description));
+    }
     addProgramList(presetList);
     parameters.addParameter(presetList->getParameter());
 

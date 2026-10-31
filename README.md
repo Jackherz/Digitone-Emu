@@ -137,8 +137,9 @@ docs/             scope and research notes
 
 ## Next milestones
 
-1. Add preset-name/dirty-state polish to the custom editor and refine the four
-   operator pages.
+1. Replace the compact preset selector with a robust browser supporting full
+   names, categories, search/scrolling, and dirty-state/user-preset handling;
+   refine the four operator pages.
 2. Establish a hardware/reference-recording test set for envelopes, ratios,
    algorithms, pitch bend, and filter behavior.
 3. Add the Digitone-style modulation, effects, and parameter locks only when

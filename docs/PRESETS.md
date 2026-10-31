@@ -26,10 +26,15 @@ categories and recipes, for example bass, metallic percussion, glassy keys,
 organ-like stacks, and evolving pads—not a copied factory bank.
 
 The bank is exposed through the VST3 program-list parameter named `Presets`.
-Hosts that support `IUnitInfo` can display the six named programs, and the
-custom editor also provides a six-position selector using short labels. Either
-path expands the selected program into the engine's normalized parameters in
-the processor. Processor/controller state version 2 stores both the selected
-preset index and the complete parameter array; version 1 state remains
-readable. Normal parameter automation remains authoritative after a preset is
-selected.
+Hosts that support `IUnitInfo` can display the six named programs and their
+original high-level category/character metadata. The custom editor also
+provides a six-position selector using short labels. Either path expands the
+selected program into the engine's normalized parameters in the processor.
+Processor/controller state version 2 stores both the selected preset index and
+the complete parameter array; version 1 state remains readable. Normal
+parameter automation remains authoritative after a preset is selected.
+
+The six-position selector is intentionally a compact first step, not the final
+browser. A more robust browser is planned for later, with full names, category
+filtering, descriptions, scrolling/search, and eventually user-created preset
+management, while keeping all sounds inside the single DN1FM plug-in.

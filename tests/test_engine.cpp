@@ -75,6 +75,10 @@ int main()
         const auto& patch = bank[index];
         assert(patch.name != nullptr);
         assert(patch.name[0] != '\0');
+        assert(patch.category != nullptr);
+        assert(patch.category[0] != '\0');
+        assert(patch.description != nullptr);
+        assert(patch.description[0] != '\0');
         for (const auto value : patch.values)
             assert(value >= 0.0f && value <= 1.0f);
 
